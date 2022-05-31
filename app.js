@@ -1,13 +1,31 @@
 const express = require("express");
 const mongoose = require("mongoose");
+var cors = require("cors");
 
-const jwt = require("jsonwebtoken"); // to generate token
-const expressjwt = require("express-jwt"); // for authorization check
 require("dotenv").config();
 
 const app = express();
 
-const Tailor = require("./models/tailor");
+// CORS Fix
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+  );
+  next();
+});
+
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 
@@ -24,24 +42,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello, World !");
-});
-
-app.put("/set-measurments", (req, res) => {
-  // const customerId = req.params.id
-
-  Tailor.updateOne(
-    { name: "tailor-01", "scheduledVisits.name": "cust-02" },
-    { $set: { "scheduledVisits.$.measurments": req.body } },
-    (err, data) => {
-      if (err) {
-        return res.status(400).json({
-          error: "Failed to set measurments",
-        });
-      }
-      res.json({ data });
-    }
-  );
+  res.send("Health check !");
 });
 
 app.listen(5001, () => console.log("Server started serving !"));

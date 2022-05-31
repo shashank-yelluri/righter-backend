@@ -23,7 +23,7 @@ exports.update = (req, res) => {
   const { customerName, measurments } = req.body;
 
   User.updateOne(
-    { _id: req.profile._id, "scheduledVisits._id": customerName },
+    { _id: req.profile._id, "scheduledVisits.name": customerName },
     { $set: { "scheduledVisits.$.measurments": measurments } },
     (err, data) => {
       if (err) {

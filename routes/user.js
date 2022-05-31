@@ -4,8 +4,9 @@ const router = express.Router();
 const { requireSignIn, isAuth, isAdmin } = require("../controllers/auth");
 const { read, update, userById } = require("../controllers/user");
 
-router.get("/user/:userId", requireSignIn, isAuth, read);
-router.post("/user/:userId", requireSignIn, isAuth, update);
+// requireSignIn, isAuth,
+router.get("/user/:userId", read);
+router.post("/user/:userId", update);
 
 router.param("userId", userById);
 
